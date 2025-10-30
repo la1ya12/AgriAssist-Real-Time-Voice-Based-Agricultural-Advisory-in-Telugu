@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <title>🌾 తెలుగు రైతు సహాయకుడు</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="overlay">
+    <div class="chat-container">
+      <h2>🌾 తెలుగు రైతు సహాయకుడు</h2>
+
+      <div id="chat-box" class="chat-box">
+        <div class="bot-msg">👩‍💻 నమస్తే రైతు గారు! నేను మీ సహాయకుడు. మాట్లాడండి...</div>
+      </div>
+
+      <div class="input-area">
+        <input id="userText" type="text" placeholder="మీ సందేశం రాయండి లేదా మైక్ ద్వారా మాట్లాడండి..." />
+        <button id="micBtn">🎤 మైక్ ఆన్</button>
+        <button id="sendBtn">📨 పంపండి</button>
+      </div>
+
+      <audio id="responseAudio" controls hidden></audio>
+    </div>
+  </div>
+
+  <script>
+    const micBtn = document.getElementById('micBtn');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatBox = document.getElementById('chat-box');
+    const userText = document.getElementById('userText');
+    const responseAudio = document.getElementById('responseAudio');
+
+    // Append messages
+    function appendMessage(sender, text) {
+      const msg = document.createElement('div');
+      msg.className = sender === 'user' ? 'user-msg' : 'bot-msg';
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Send typed message
+    sendBtn.onclick = async () => {
+      const text = userText.value.trim();
+      if (!text) return;
+      appendMessage('user', text);
+      userText.value = '';
+
+      const formData = new FormData();
+      formData.append('text', text);
+
+      const res = await fetch('/voice', { method: 'POST', body: formData });
+      const data = await res.json();
+      appendMessage('bot', data.text);
+      responseAudio.src = data.audio + "?t=" + new Date().getTime(); // cache-busting
+      responseAudio.hidden = false;
+      responseAudio.play();
+    };
+
+    // Voice recognition (Telugu)
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = "te-IN";
+    recognition.interimResults = false;
+
+    micBtn.onclick = () => {
+      recognition.start();
+      micBtn.textContent = "🎙 వినిపిస్తోంది...";
+    };
+
+    recognition.onresult = async (event) => {
+      const text = event.results[0][0].transcript;
+      appendMessage('user', text);
+
+      const formData = new FormData();
+      formData.append('text', text);
+
+      const res = await fetch('/voice', { method: 'POST', body: formData });
+      const data = await res.json();
+      appendMessage('bot', data.text);
+      responseAudio.src = data.audio + "?t=" + new Date().getTime();
+      responseAudio.hidden = false;
+      responseAudio.play();
+
+      micBtn.textContent = "🎤 మైక్ ఆన్";
+    };
+
+    recognition.onerror = (e) => {
+      micBtn.textContent = "🎤 మైక్ ఆన్";
+      appendMessage('bot', "క్షమించండి, వాయిస్ గుర్తించలేకపోయాను.");
+    };
+  </script>
+</body>
+</html>
