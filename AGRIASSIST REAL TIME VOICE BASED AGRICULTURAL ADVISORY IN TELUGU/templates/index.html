@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <title>తెలుగు రైతు సహాయకుడు</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="chat-container">
+    <h2>🌾 తెలుగు రైతు సహాయకుడు</h2>
+
+    <div id="chat"></div>
+
+    <div class="input-area">
+        <input id="text" placeholder="మీ ప్రశ్న చెప్పండి">
+        <button onclick="send()">పంపండి</button>
+        <button onclick="startMic()">🎤</button>
+    </div>
+
+    <audio id="audio" controls></audio>
+</div>
+
+<script>
+function send(msg = null) {
+    let t = msg || document.getElementById("text").value;
+    if (!t) return;
+
+    document.getElementById("chat").innerHTML +=
+        `<div class="user-message">👨‍🌾 ${t}</div>`;
+
+    let fd = new FormData();
+    fd.append("text", t);
+    document.getElementById("text").value = "";
+
+    fetch("/voice", { method: "POST", body: fd })
+        .then(r => r.json())
+        .then(d => {
+            document.getElementById("chat").innerHTML +=
+                `<div class="bot-message">🤖 ${d.text}</div>`;
+
+            let a = document.getElementById("audio");
+            a.src = d.audio;
+            a.play();
+
+            // Auto-scroll
+            let chat = document.getElementById("chat");
+            chat.scrollTop = chat.scrollHeight;
+        });
+}
+
+function startMic() {
+    let r = new webkitSpeechRecognition();
+    r.lang = "te-IN";
+    r.onresult = e => send(e.results[0][0].transcript);
+    r.start();
+}
+</script>
+
+</body>
+</html>

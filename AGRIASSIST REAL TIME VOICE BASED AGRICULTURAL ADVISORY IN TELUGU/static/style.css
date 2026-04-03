@@ -1,0 +1,125 @@
+/* =========================
+   GLOBAL / BACKGROUND
+========================= */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+
+    background-image: url("/static/farm-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================
+   CHAT CONTAINER (NO BG)
+========================= */
+.chat-container {
+    width: 450px;
+    max-width: 95%;
+    padding: 20px;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* =========================
+   TITLE
+========================= */
+.chat-container h2 {
+    background: transparent;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+/* =========================
+   CHAT AREA
+========================= */
+#chat {
+    display: flex;
+    flex-direction: column;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+/* =========================
+   FARMER MESSAGE (WHITE)
+========================= */
+.user-message {
+    background: #ffffff;
+    color: #000000;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin: 6px 0;
+    max-width: 80%;
+    align-self: flex-end;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   BOT MESSAGE (PINK)
+========================= */
+.bot-message {
+    background: #ffd6e8;
+    color: #000000;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin: 6px 0;
+    max-width: 80%;
+    align-self: flex-start;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   INPUT AREA
+========================= */
+.input-area {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+/* =========================
+   TEXT INPUT (TRANSPARENT)
+========================= */
+input {
+    flex: 1;
+    background: rgba(0,0,0,0.45);
+    color: #ffffff;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    outline: none;
+}
+
+input::placeholder {
+    color: #e0e0e0;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+button {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background: #4CAF50;
+    color: #ffffff;
+}
+
+/* =========================
+   AUDIO PLAYER
+========================= */
+audio {
+    width: 100%;
+    background: transparent;
+}
